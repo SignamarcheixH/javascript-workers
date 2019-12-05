@@ -13,7 +13,7 @@ class AppFixtures extends Fixture
     {
         $faker = Faker\Factory::create();
 
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 55; $i++) {
 
             $user = new User();
             $user->setAge($faker->numberBetween(3, 90));
