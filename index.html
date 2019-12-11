@@ -9,6 +9,7 @@
     <body>
         <h1>Javascript workers in action</h1>
         <p>Click on the pokeball and see which Pokemon you catched !</p>
+        <p>Let's see on how many time you can catch'em all !</p>
         <div class="container">
             <ul class="poke-list"></ul>
             <div>
@@ -19,11 +20,11 @@
                     <div>Types : <span class="types"></span></div>
                     <div>Height : <span class="height"></span> ft</div>
                     <div>Weight : <span class="weight"></span> lbs</div>
+                    <div class="loader">
+                        <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                    </div>
                 </div>
             </div>    
-            <div class="loader">
-                <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-            </div>
         </div>
         <script src="javascript/script.js"></script>
     </body>

@@ -14,7 +14,7 @@ onmessage = (e) => {
 	         		data: response.data 
 	         	})))
 	} else if(e.data == 'init') {
-		axios.get(baseUrl + '?limit=151')
+		axios.get(baseUrl + '?limit=150')
 			 .then(response => (postMessage( 
 			 	{
 			 		todo: 'init',

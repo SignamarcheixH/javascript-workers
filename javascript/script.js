@@ -52,6 +52,19 @@ document.addEventListener("DOMContentLoaded",() => {
                 }
                 document.getElementsByClassName('sprite')[0].src = jsonFetched['sprites'].front_default;
                 container.classList.remove('is-loading');
+                let pokeList = [...document.getElementsByClassName("poke-badge")];
+                let find = pokeList.filter((elem) => {
+                    if(elem.dataset.name == jsonFetched['name'] && elem.classList.contains("empty")) {
+                        return true;
+                    }
+                    return false;
+                })
+                if(find.length) {
+                    find[0].style.backgroundImage = 'url(' + jsonFetched['sprites'].front_default + ')';
+                    find[0].style.backgroundColor = typesColor[jsonFetched['types'].filter(e => e.slot == 1)[0].type.name];
+                    find[0].classList.remove("empty");
+                }
+
             } else if(e.data.todo == 'init') {
                 let pokeArray = e.data.data.results;
                 let pokeList = document.getElementsByClassName("poke-list")[0];
