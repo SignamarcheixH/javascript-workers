@@ -20,11 +20,12 @@ const typesColor = {
     'fairy': '#D685AD',
 }
 const container = document.getElementsByClassName("container")[0];
+const catchphrase = document.getElementsByClassName("catchphrase")[0];
 const btnRefresh = document.getElementById("refresh");
 const card = document.getElementById("text-placeholder");
 
-
 document.addEventListener("DOMContentLoaded",() => {
+    let timer = launchTimer();
     if (window.Worker) {
         let worker = new Worker('./javascript/dist/worker-bundled.js');
         worker.postMessage('init');
@@ -37,6 +38,10 @@ document.addEventListener("DOMContentLoaded",() => {
         worker.onmessage = function(e) {
             if(e.data.todo == 'fetch') {
                 updateWithPokemon(e.data.data);
+                if(allCompleted()) {
+                    clearInterval(timer)
+                    catchphrase.innerHTML = 'Congrats ! You wasted your time !'
+                }
             } else if(e.data.todo == 'init') {
                 pokeListInitialization(e.data.data.results);
             }
@@ -88,5 +93,34 @@ function pokeListInitialization(pokeArray) {
         pokeList.appendChild(li);
         li.dataset['name'] = poke.name;
         li.classList.add('empty','poke-badge');
+    }
+}
+
+function allCompleted() {
+    let pokeList = [...document.getElementsByClassName("poke-badge")];
+    let find = pokeList.filter(e => e.classList.contains("empty"));
+    return(find.length < 1);
+}
+
+function launchTimer() {
+    let minutesLabel = document.getElementById("minutes");
+    let secondsLabel = document.getElementById("seconds");
+    let totalSeconds = 0;
+    let timer = setInterval(setTime, 1000);
+    return timer;
+
+    function setTime() {
+      ++totalSeconds;
+      secondsLabel.innerHTML = pad(totalSeconds % 60);
+      minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60));
+    }
+
+    function pad(val) {
+      let valString = val + "";
+      if (valString.length < 2) {
+        return "0" + valString;
+      } else {
+        return valString;
+      }
     }
 }
