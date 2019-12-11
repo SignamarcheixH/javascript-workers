@@ -1,5 +1,6 @@
-h1 {
+h1, p {
   font-family: sans-serif;
+  text-align: center;
 }
 
 .container {
@@ -9,14 +10,44 @@ h1 {
   align-items: center;
 }
 .container #refresh {
-  width: 30%;
-  padding: 10px;
-  background-color: #268fc3;
-  color: white;
+  position: relative;
+  padding: 20px;
+  background-color: red;
+  color: black;
   font-size: 16px;
-  border-radius: 5px;
+  border-radius: 50px;
+  border: 2px solid black;
   outline: none;
   margin-bottom: 20px;
+}
+.container #refresh::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  height: 50%;
+  width: 100%;
+}
+.container #refresh::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 7px;
+  height: 7px;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+.container #refresh span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
 }
 .container #text-placeholder {
   display: flex;
