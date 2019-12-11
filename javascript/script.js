@@ -19,15 +19,14 @@ const typesColor = {
     'steel': '#B7B7CE',
     'fairy': '#D685AD',
 }
+const container = document.getElementsByClassName("container")[0];
+const btnRefresh = document.getElementById("refresh");
+const card = document.getElementById("text-placeholder");
+
 
 document.addEventListener("DOMContentLoaded",() => {
     if (window.Worker) {
         let worker = new Worker('./javascript/dist/worker-bundled.js');
-
-        let btnRefresh = document.getElementById("refresh");
-        let container = document.getElementsByClassName("container")[0];
-        let card = document.getElementById("text-placeholder");
-
         worker.postMessage('init');
 
         btnRefresh.addEventListener("click",() => {
@@ -37,46 +36,57 @@ document.addEventListener("DOMContentLoaded",() => {
 
         worker.onmessage = function(e) {
             if(e.data.todo == 'fetch') {
-                let jsonFetched = e.data.data;
-                for(let fieldName of fields) {
-                    document.getElementsByClassName(fieldName)[0].innerHTML = jsonFetched[fieldName];
-                }
-                document.getElementsByClassName('types')[0].innerHTML = jsonFetched['types'].map(x => x.type.name)
-                if(jsonFetched['types'].length > 1) {
-                    card.style.borderTopColor = typesColor[jsonFetched['types'][0].type.name];
-                    card.style.borderLeftColor = typesColor[jsonFetched['types'][0].type.name];
-                    card.style.borderBottomColor = typesColor[jsonFetched['types'][1].type.name];
-                    card.style.borderRightColor = typesColor[jsonFetched['types'][1].type.name];
-                } else {
-                    card.style.borderColor = typesColor[jsonFetched['types'][0].type.name];
-                }
-                document.getElementsByClassName('sprite')[0].src = jsonFetched['sprites'].front_default;
-                container.classList.remove('is-loading');
-                let pokeList = [...document.getElementsByClassName("poke-badge")];
-                let find = pokeList.filter((elem) => {
-                    if(elem.dataset.name == jsonFetched['name'] && elem.classList.contains("empty")) {
-                        return true;
-                    }
-                    return false;
-                })
-                if(find.length) {
-                    find[0].style.backgroundImage = 'url(' + jsonFetched['sprites'].front_default + ')';
-                    find[0].style.backgroundColor = typesColor[jsonFetched['types'].filter(e => e.slot == 1)[0].type.name];
-                    find[0].classList.remove("empty");
-                }
-
+                updateWithPokemon(e.data.data);
             } else if(e.data.todo == 'init') {
-                let pokeArray = e.data.data.results;
-                let pokeList = document.getElementsByClassName("poke-list")[0];
-                console.log(pokeArray)
-                for(let poke of pokeArray) {
-                    let li = document.createElement('li');
-                    pokeList.appendChild(li);
-                    li.dataset['name'] = poke.name;
-                    li.classList.add('empty','poke-badge');
-                    console.log(poke.name);
-                }
+                pokeListInitialization(e.data.data.results);
             }
         }
     }
 })
+
+
+
+
+
+function updateWithPokemon(pokemon) {
+    let pokeList = [...document.getElementsByClassName("poke-badge")];
+    for(let fieldName of fields) { document.getElementsByClassName(fieldName)[0].innerHTML = pokemon[fieldName]; }
+    document.getElementsByClassName('types')[0].innerHTML = pokemon['types'].map(x => x.type.name)
+    document.getElementsByClassName('sprite')[0].src = pokemon['sprites'].front_default;
+
+    if(pokemon['types'].length > 1) {
+        card.style.borderTopColor = typesColor[pokemon['types'][0].type.name];
+        card.style.borderLeftColor = typesColor[pokemon['types'][0].type.name];
+        card.style.borderBottomColor = typesColor[pokemon['types'][1].type.name];
+        card.style.borderRightColor = typesColor[pokemon['types'][1].type.name];
+    } else {
+        card.style.borderColor = typesColor[pokemon['types'][0].type.name];
+    }
+
+
+    container.classList.remove('is-loading');
+    
+    let find = pokeList.filter((elem) => {
+        if(elem.dataset.name == pokemon['name'] && elem.classList.contains("empty")) {
+            return true;
+        }
+        return false;
+    })
+
+    if(find.length) {
+        find[0].style.backgroundImage = 'url(' + pokemon['sprites'].front_default + ')';
+        find[0].style.backgroundColor = typesColor[pokemon['types'].filter(e => e.slot == 1)[0].type.name];
+        find[0].classList.remove("empty");
+    }
+}
+
+
+function pokeListInitialization(pokeArray) {
+    let pokeList = document.getElementsByClassName("poke-list")[0];
+    for(let poke of pokeArray) {
+        let li = document.createElement('li');
+        pokeList.appendChild(li);
+        li.dataset['name'] = poke.name;
+        li.classList.add('empty','poke-badge');
+    }
+}
