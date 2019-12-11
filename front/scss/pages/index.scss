@@ -1,6 +1,5 @@
-h1 {
-	font-family: sans-serif;
-}
+h1 { font-family: sans-serif; }
+
 .container {
 	position: relative;
 	display: flex;
@@ -17,13 +16,17 @@ h1 {
 	    margin-bottom: 20px;
 	}
 	#text-placeholder {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		background-color: lightgray;
 	    padding: 20px 20px;
 	    line-height: 20px;
 	    letter-spacing: 1px;
 	    font-family: sans-serif;
 	    border-radius: 5px;
-	    width: 96%;
+	    border: solid 3px black;
+	    width: 15%;
 	    > div { 
 	    	font-weight: bold;
 	    	span { font-weight: normal; }
