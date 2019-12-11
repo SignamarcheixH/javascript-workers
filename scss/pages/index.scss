@@ -6,8 +6,14 @@ h1,p {
 .container {
 	position: relative;
 	display: flex;
-	flex-direction: column;
-	align-items: center;
+	//flex-direction: column;
+	//align-items: center;
+	> div {
+		width: 30%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 	#refresh {
 		position: relative;
 		padding: 20px;
@@ -53,13 +59,12 @@ h1,p {
 		flex-direction: column;
 		align-items: center;
 		background-color: white;
-	    padding: 20px 20px;
+	    padding: 20px 30px;
 	    line-height: 20px;
 	    letter-spacing: 1px;
 	    font-family: sans-serif;
 	    border-radius: 5px;
 	    border: solid 10px black;
-	    width: 15%;
 	    > div { 
 	    	font-weight: bold;
 	    	span { font-weight: normal; }
@@ -73,5 +78,21 @@ h1,p {
 	}
 	&:not(.is-loading) {
 		.loader { display: none; }
+	}
+	.poke-list {
+		list-style-type: none;
+		width: 32.3%;
+		height: 500px;
+		overflow: scroll;
+		display: flex;
+		flex-wrap: wrap;
+		.poke-badge {
+			width: 55px;
+			height: 55px;
+			border-radius: 50%;
+			background-color: lightgray;
+			margin-bottom: 10px;
+			margin-right: 10px;
+		}
 	}
 }

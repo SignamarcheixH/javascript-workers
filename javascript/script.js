@@ -28,27 +28,42 @@ document.addEventListener("DOMContentLoaded",() => {
         let container = document.getElementsByClassName("container")[0];
         let card = document.getElementById("text-placeholder");
 
+        worker.postMessage('init');
+
         btnRefresh.addEventListener("click",() => {
             container.classList.add('is-loading');
-            worker.postMessage('go');
+            worker.postMessage('fetch');
         });
 
         worker.onmessage = function(e) {
-            let jsonFetched = e.data;
-            for(let fieldName of fields) {
-                document.getElementsByClassName(fieldName)[0].innerHTML = jsonFetched[fieldName];
+            if(e.data.todo == 'fetch') {
+                let jsonFetched = e.data.data;
+                for(let fieldName of fields) {
+                    document.getElementsByClassName(fieldName)[0].innerHTML = jsonFetched[fieldName];
+                }
+                document.getElementsByClassName('types')[0].innerHTML = jsonFetched['types'].map(x => x.type.name)
+                if(jsonFetched['types'].length > 1) {
+                    card.style.borderTopColor = typesColor[jsonFetched['types'][0].type.name];
+                    card.style.borderLeftColor = typesColor[jsonFetched['types'][0].type.name];
+                    card.style.borderBottomColor = typesColor[jsonFetched['types'][1].type.name];
+                    card.style.borderRightColor = typesColor[jsonFetched['types'][1].type.name];
+                } else {
+                    card.style.borderColor = typesColor[jsonFetched['types'][0].type.name];
+                }
+                document.getElementsByClassName('sprite')[0].src = jsonFetched['sprites'].front_default;
+                container.classList.remove('is-loading');
+            } else if(e.data.todo == 'init') {
+                let pokeArray = e.data.data.results;
+                let pokeList = document.getElementsByClassName("poke-list")[0];
+                console.log(pokeArray)
+                for(let poke of pokeArray) {
+                    let li = document.createElement('li');
+                    pokeList.appendChild(li);
+                    li.dataset['name'] = poke.name;
+                    li.classList.add('empty','poke-badge');
+                    console.log(poke.name);
+                }
             }
-            document.getElementsByClassName('types')[0].innerHTML = jsonFetched['types'].map(x => x.type.name)
-            if(jsonFetched['types'].length > 1) {
-                card.style.borderTopColor = typesColor[jsonFetched['types'][0].type.name];
-                card.style.borderLeftColor = typesColor[jsonFetched['types'][0].type.name];
-                card.style.borderBottomColor = typesColor[jsonFetched['types'][1].type.name];
-                card.style.borderRightColor = typesColor[jsonFetched['types'][1].type.name];
-            } else {
-                card.style.borderColor = typesColor[jsonFetched['types'][0].type.name];
-            }
-            document.getElementsByClassName('sprite')[0].src = jsonFetched['sprites'].front_default;
-            container.classList.remove('is-loading');
         }
     }
 })
